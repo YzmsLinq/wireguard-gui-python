@@ -82,11 +82,11 @@ class Ui_EditView(QtWidgets.QDialog):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("EditWindow", "Edit"))
-        self.label.setText(_translate("EditWindow", "Public key"))
-        self.label_2.setText(_translate("EditWindow", "Interface name", None))
-        self.label_3.setText(_translate("EditWindow", ".conf", None))
+        #_translate = QtCore.QCoreApplication.translate
+        self.setWindowTitle(QtCore.QCoreApplication.translate("EditWindow", "Edit"))
+        self.label.setText(QtCore.QCoreApplication.translate("EditWindow", "Public key"))
+        self.label_2.setText(QtCore.QCoreApplication.translate("EditWindow", "Interface name", None))
+        self.label_3.setText(QtCore.QCoreApplication.translate("EditWindow", ".conf", None))
 
     def update_publickey(self):
         if "privatekey" in self.plainTextEdit.toPlainText().lower():

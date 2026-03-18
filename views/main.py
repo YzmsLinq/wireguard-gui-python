@@ -188,12 +188,14 @@ class Ui_MainView(QtWidgets.QMainWindow):
             self.update_tray_menu()
 
         self.tray_menu_show = QtGui.QAction("Show")
+        self.tray_menu_show.setText(self.tr("Show"))
         self.tray_menu_show.triggered.connect(self.show)
         self.tray_menu_show.setIcon(
             QtGui.QIcon(f"{PROJECT_DIRECTORY}/resources/icons/show-icon.png")
         )
 
         self.tray_menu_quit = QtGui.QAction("Quit")
+        self.tray_menu_quit.setText(self.tr("Quit"))
         self.tray_menu_quit.triggered.connect(_exit)
         self.tray_menu_quit.setIcon(
             QtGui.QIcon(f"{PROJECT_DIRECTORY}/resources/icons/quit-icon.png")
@@ -211,11 +213,13 @@ class Ui_MainView(QtWidgets.QMainWindow):
         self.options_menu = QtWidgets.QMenu()
 
         self.options_menu_import_interfaces = QtGui.QAction("Import interfaces")
+        self.options_menu_import_interfaces.setText(self.tr("Import interfaces"))
         self.options_menu_import_interfaces.triggered.connect(
             self.import_interfaces_option
         )
 
         self.options_menu_new_interface = QtGui.QAction("New interface")
+        self.options_menu_new_interface.setText(self.tr("New interface"))
         self.options_menu_new_interface.triggered.connect(self.new_interface_option)
 
         self.options_menu.addAction(self.options_menu_new_interface)
@@ -341,12 +345,12 @@ class Ui_MainView(QtWidgets.QMainWindow):
         if current_item != None:
             current_item = current_item.text()
             if is_actived_interface(current_item):
-                self.turn_activation_button.setText("Deactivate")
+                self.turn_activation_button.setText(self.tr("Deactivate"))
                 self.turn_activation_button.setIcon(
                     QtGui.QIcon(f"{PROJECT_DIRECTORY}/resources/icons/down-icon.png")
                 )
             else:
-                self.turn_activation_button.setText("Activate")
+                self.turn_activation_button.setText(self.tr("Activate"))
                 self.turn_activation_button.setIcon(
                     QtGui.QIcon(f"{PROJECT_DIRECTORY}/resources/icons/up-icon.png")
                 )
@@ -433,7 +437,9 @@ class Ui_MainView(QtWidgets.QMainWindow):
         if current_item != None:
             current_item = current_item.text()
             is_actived = is_actived_interface(current_item)
-            self.groupBox.setTitle(f"Interface: {get_interface_name(current_item)}")
+            title0 = self.tr("Interface: ")
+            title = title0 + get_interface_name(current_item)  
+            self.groupBox.setTitle(title)
 
             if is_actived:
                 full_interface_config = get_config_active_content(current_item)
@@ -481,8 +487,8 @@ class Ui_MainView(QtWidgets.QMainWindow):
         else:
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
-                "Error",
-                "You have to select an interface",
+                self.tr("Error"),
+                self.tr("You have to select an interface"),
             ).exec()
 
     def edit_button_click(self):
@@ -504,30 +510,33 @@ class Ui_MainView(QtWidgets.QMainWindow):
                         self.update_interface_info()
                     QtWidgets.QMessageBox(
                         QtWidgets.QMessageBox.Icon.Information,
-                        "Success",
-                        "Configuration updated successfully",
+                        self.tr("Success"),
+                        self.tr("Configuration updated successfully"),
                     ).exec()
                 else:
                     QtWidgets.QMessageBox(
                         QtWidgets.QMessageBox.Icon.Critical,
-                        "Error",
-                        "Invalid configuration, returning to the previous configuration",
+                        self.tr("Error"),
+                        self.tr("Invalid configuration, returning to the previous configuration"),
                     ).exec()
         else:
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
-                "Error",
-                "You have to select an interface",
+                self.tr("Error"),
+                self.tr("You have to select an interface"),
             ).exec()
 
     def delete_button_click(self):
         selected_items = self.listWidget.selectedItems()
+        msg0 = self.tr("Are you sure you want to delete ")
+        msg1 = self.tr(" interfaces?")
+        msg = msg0 + str(len(selected_items)) + msg1 
 
         if selected_items:
             reply = QtWidgets.QMessageBox.question(
                 self,
-                "Confirm deleting",
-                f"Are you sure you want to delete {len(selected_items)} interfaces?",
+                self.tr("Confirm deleting"),
+                msg,
                 QtWidgets.QMessageBox.StandardButton.Yes
                 | QtWidgets.QMessageBox.StandardButton.No,
                 QtWidgets.QMessageBox.StandardButton.No,
@@ -540,35 +549,35 @@ class Ui_MainView(QtWidgets.QMainWindow):
                 if self.listWidget.count() == 0:
                     self.plainTextEdit.clear()
                     self.plainTextEdit_2.clear()
-                    self.turn_activation_button.setText("Activate / Deactivate")
+                    self.turn_activation_button.setText(self.tr("Activate / Deactivate"))
                     self.turn_activation_button.setEnabled(False)
                     self.edit_button.setEnabled(False)
         else:
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
-                "Error",
-                "You have to select an interface",
+                self.tr("Error"),
+                self.tr("You have to select an interface"),
             ).exec()
 
     def export_button_click(self):
-        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Select directory")
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr("Select directory"))
         if directory != "" and export_interfaces(directory):
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Information,
-                "Success",
-                "Interfaces exported successfully",
+                self.tr("Success"),
+                self.tr("Interfaces exported successfully"),
             ).exec()
 
     def add_interface_button_click(self):
         interface_file = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Select config file", filter="*.conf"
+            self, self.tr("Select config file"), filter="*.conf"
         )[0]
         if interface_file != "" and add_interface(interface_file):
             self.update_list()
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Information,
-                "Success",
-                "Interface added successfully",
+                self.tr("Success"),
+                self.tr("Interface added successfully"),
             ).exec()
 
     # END BUTTONS #
@@ -577,14 +586,14 @@ class Ui_MainView(QtWidgets.QMainWindow):
 
     def import_interfaces_option(self):
         interfaces_zip_file = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Select zip file", filter="*.zip"
+            self, self.tr("Select zip file"), filter="*.zip"
         )[0]
         if interfaces_zip_file != "" and import_interfaces(interfaces_zip_file):
             self.update_list()
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Information,
-                "Success",
-                "Interfaces imported successfully",
+                self.tr("Success"),
+                self.tr("Interfaces imported successfully"),
             ).exec()
 
     def new_interface_option(self):
@@ -599,16 +608,19 @@ class Ui_MainView(QtWidgets.QMainWindow):
                 and new_interface(interface_name, interface_config)
             ):
                 self.update_list()
+                msg0 = self.tr("Interface ")
+                msg1 = self.tr(" added successfully")
+                msg = msg0 + interface_name + msg1
                 QtWidgets.QMessageBox(
                     QtWidgets.QMessageBox.Icon.Information,
-                    "Success",
-                    f"Interface {interface_name} added successfully",
+                    self.tr("Success"),
+                    msg,
                 ).exec()
             else:
                 QtWidgets.QMessageBox(
                     QtWidgets.QMessageBox.Icon.Critical,
-                    "Error",
-                    "Invalid configuration, interface didn't created",
+                    self.tr("Error"),
+                    self.tr("Invalid configuration, interface didn't created"),
                 ).exec()
 
     # END OPTIONS #
