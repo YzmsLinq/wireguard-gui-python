@@ -14,7 +14,8 @@ touch $LOCKFILE
 while true; do
   if output=$(zenity --password --title="Sudo password required"); then
     if echo "$output" | sudo -S true; then
-      sudo /opt/wireguard-gui-python/venv/bin/python3 /opt/wireguard-gui-python/wgp.py
+      cd /opt/wireguard-gui-python/
+      sudo venv/bin/python3 wgp.py
       break
     else
       zenity --error --text="Invalid sudo password"
